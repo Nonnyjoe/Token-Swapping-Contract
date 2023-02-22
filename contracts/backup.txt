@@ -1,0 +1,125 @@
+function swapEthToLink() payable public{
+        require(msg.value > 0, "INSUFFICIENT ETH VALUE");
+        int EthPrice = getLatestPrice_(priceFeedEth, EthDecimals);
+        int LinkPrice = getLatestPrice_(priceFeedLink, LinkDecimals);
+        PriceCheck_(EthPrice, LinkPrice);
+        int LinkToReceive = ((int(msg.value) * EthPrice) / LinkPrice);
+        transfer_(Link, LinkToReceive, msg.sender);
+    }
+
+    function swapEthToDai() payable public{
+        require(msg.value > 0, "INSUFFICIENT ETH VALUE");
+        int EthPrice = getLatestPrice_(priceFeedEth, EthDecimals);
+        int DaiPrice = getLatestPrice_(priceFeedDai, DaiDecimals);
+        PriceCheck_(EthPrice, DaiPrice);
+        int DaiToReceive = ((int(msg.value) * EthPrice) / DaiPrice);
+        transfer_(Dai, DaiToReceive, msg.sender);
+    }
+
+    function swapEthToUsdc() payable public{
+        require(msg.value > 0, "INSUFFICIENT ETH VALUE");
+        int EthPrice = getLatestPrice_(priceFeedEth, EthDecimals);
+        int UsdcPrice = getLatestPrice_(priceFeedUsdc, UsdcDecimals);
+        PriceCheck_(EthPrice, UsdcPrice);
+        int UsdcToReceive = ((int(msg.value) * EthPrice) / UsdcPrice);
+        transfer_(Usdc, UsdcToReceive, msg.sender);
+    }
+
+    function swapLinkToDai(uint linkToSwap) public {
+        require(linkToSwap > 0, "INVALID LINK AMOUNT TO SWAP");
+        int LinkPrice = getLatestPrice_(priceFeedLink, LinkDecimals);
+        int DaiPrice = getLatestPrice_(priceFeedDai, DaiDecimals);
+        PriceCheck_(LinkPrice, DaiPrice);
+        int DaiToReceive = ((int(linkToSwap) * LinkPrice) / DaiPrice);
+        bool status = transferFrom_(Link, int(linkToSwap), msg.sender);
+        require(status, "LINK DEPOSIT FAILED");
+        transfer_(Dai, DaiToReceive, msg.sender);
+    }
+
+    function swapLinkToUsdc(uint linkToSwap) public {
+        require(linkToSwap > 0, "INVALID LINK AMOUNT TO SWAP");
+        int LinkPrice = getLatestPrice_(priceFeedLink, LinkDecimals);
+        int UsdcPrice = getLatestPrice_(priceFeedUsdc, UsdcDecimals);
+        PriceCheck_(LinkPrice, UsdcPrice);
+        int UsdcToReceive = ((int(linkToSwap) * LinkPrice) / UsdcPrice);
+        bool status = transferFrom_(Link, int(linkToSwap), msg.sender);
+        require(status, "LINK DEPOSIT FAILED");
+        transfer_(Usdc, UsdcToReceive, msg.sender);
+    }
+    
+    function swapLinkToEth(uint linkToSwap) public {
+        require(linkToSwap > 0, "INVALID LINK AMOUNT TO SWAP");
+        int LinkPrice = getLatestPrice_(priceFeedLink, LinkDecimals);
+        int EthPrice = getLatestPrice_(priceFeedEth, EthDecimals);
+        PriceCheck_(LinkPrice, EthPrice);
+        int EthToReceive = ((int(linkToSwap) * LinkPrice) / EthPrice);
+        bool status = transferFrom_(Link, int(linkToSwap), msg.sender);
+        require(status, "LINK DEPOSIT FAILED");
+        TransferEth(uint(EthToReceive), msg.sender);
+    }
+
+    function swapDaiToLink(uint DaiToSwap) public {
+        require(DaiToSwap > 0, "INVALID LINK AMOUNT TO SWAP");
+        int LinkPrice = getLatestPrice_(priceFeedLink, LinkDecimals);
+        int DaiPrice = getLatestPrice_(priceFeedDai, DaiDecimals);
+        PriceCheck_(LinkPrice, DaiPrice);
+        int LinkToReceive = ((int(DaiToSwap) * DaiPrice) / LinkPrice);
+        bool status = transferFrom_(Dai, int(DaiToSwap), msg.sender);
+        require(status, "Dai DEPOSIT FAILED");
+        transfer_(Link, LinkToReceive, msg.sender);
+    }
+
+    function swapDaiToUsdc(uint DaiToSwap) public {
+        require(DaiToSwap > 0, "INVALID LINK AMOUNT TO SWAP");
+        int UsdcPrice = getLatestPrice_(priceFeedUsdc, UsdcDecimals);
+        int DaiPrice = getLatestPrice_(priceFeedDai, DaiDecimals);
+        PriceCheck_(UsdcPrice, DaiPrice);
+        int UsdcToReceive = ((int(DaiToSwap) * DaiPrice) / UsdcPrice);
+        bool status = transferFrom_(Dai, int(DaiToSwap), msg.sender);
+        require(status, "Dai DEPOSIT FAILED");
+        transfer_(Usdc, UsdcToReceive, msg.sender);
+    }
+
+    function swapDaiToEth(uint DaiToSwap) public {
+        require(DaiToSwap > 0, "INVALID LINK AMOUNT TO SWAP");
+        int EthPrice = getLatestPrice_(priceFeedEth, EthDecimals);
+        int DaiPrice = getLatestPrice_(priceFeedDai, DaiDecimals);
+        PriceCheck_(EthPrice, DaiPrice);
+        int EthToReceive = ((int(DaiToSwap) * DaiPrice) / EthPrice);
+        bool status = transferFrom_(Dai, int(DaiToSwap), msg.sender);
+        require(status, "Dai DEPOSIT FAILED");
+        TransferEth(uint(EthToReceive), msg.sender);
+    }
+
+    function swapUsdcToLink(uint UsdcToSwap) public {
+        require(UsdcToSwap > 0, "INVALID LINK AMOUNT TO SWAP");
+        int LinkPrice = getLatestPrice_(priceFeedLink, LinkDecimals);
+        int UsdcPrice = getLatestPrice_(priceFeedUsdc, UsdcDecimals);
+        PriceCheck_(LinkPrice, UsdcPrice);
+        int LinkToReceive = ((int(UsdcToSwap) * UsdcPrice) / LinkPrice);
+        bool status = transferFrom_(Usdc, int(UsdcToSwap), msg.sender);
+        require(status, "Usdc DEPOSIT FAILED");
+        transfer_(Link, LinkToReceive, msg.sender);
+    }
+
+    function swapUsdcToDai(uint UsdcToSwap) public {
+        require(UsdcToSwap > 0, "INVALID LINK AMOUNT TO SWAP");
+        int DaiPrice = getLatestPrice_(priceFeedDai, DaiDecimals);
+        int UsdcPrice = getLatestPrice_(priceFeedUsdc, UsdcDecimals);
+        PriceCheck_(DaiPrice, UsdcPrice);
+        int DaiToReceive = ((int(UsdcToSwap) * UsdcPrice) / DaiPrice);
+        bool status = transferFrom_(Usdc, int(UsdcToSwap), msg.sender);
+        require(status, "Usdc DEPOSIT FAILED");
+        transfer_(Dai, DaiToReceive, msg.sender);
+    }
+
+    function swapUsdcToEth(uint UsdcToSwap) public {
+        require(UsdcToSwap > 0, "INVALID LINK AMOUNT TO SWAP");
+        int UsdcPrice = getLatestPrice_(priceFeedUsdc, UsdcDecimals);
+        int EthPrice = getLatestPrice_(priceFeedEth, EthDecimals);
+        PriceCheck_(UsdcPrice, EthPrice);
+        int EthToReceive = ((int(UsdcToSwap) * UsdcPrice) / EthPrice);
+        bool status = transferFrom_(Usdc, int(UsdcToSwap), msg.sender);
+        require(status, "Usdc DEPOSIT FAILED");
+        TransferEth(uint(EthToReceive), msg.sender);
+    }

@@ -1,0 +1,19 @@
+{
+  "name": "solidity-project-week-day-2",
+  "version": "1.0.0",
+  "description": "A token swapping contract that uses chainlink price oracle to determine the output amount",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "IDOGWU CHINONSO",
+  "license": "ISC",
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^2.0.1",
+    "hardhat": "^2.12.7"
+  },
+  "dependencies": {
+    "@chainlink/contracts": "^0.6.1",
+    "dotenv": "^16.0.3"
+  }
+}
