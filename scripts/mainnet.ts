@@ -56,7 +56,7 @@ async function main() {
     //////////////////////////////////////////
     // GRANT ALLOWANCE
     /////////////////////////////////////////
-    const allowanceValue = await ethers.utils.parseEther("50");
+    const allowanceValue = await ethers.utils.parseEther("5000");
     const daiAllowance = dai.connect(impersonatedSigner).approve(swapDexaddress, allowanceValue);
     const usdcAllowance = usdc.connect(impersonatedSigner3).approve(swapDexaddress, allowanceValue);
     const uniAllowance = uni.connect(impersonatedSigner4).approve(swapDexaddress, allowanceValue);
@@ -71,7 +71,8 @@ async function main() {
     /////////////////////////////////////////////
     console.log(`LIQUIDITY ADDING STARTED`);
     const daiLiquidity = await ethers.utils.parseEther("1");
-    const addDaiLiquidity = await swapDex.connect(impersonatedSigner).addDaiLiquidity(daiLiquidity);
+    const daiLiquidity2 = await ethers.utils.parseEther("500");
+    const addDaiLiquidity = await swapDex.connect(impersonatedSigner).addDaiLiquidity(daiLiquidity2);
     console.log(`DAI COMPLETED`);
     const addUniLiquidity = await swapDex.connect(impersonatedSigner4).addUniLiquidity(daiLiquidity);
     console.log(`UNI COMPLETED`);
@@ -94,49 +95,50 @@ async function main() {
     ////////////////////////////////////////////////
     // SWAP TOKENS <DAI TO USDC>
     ////////////////////////////////////////////////
-    console.log(`DAI TO USDC SWAPPING STARTING`);
+    console.log(`DAI TO USDC SWAPPING STARTING...............................`);
     const MyUsdcBalance = await usdc.connect(impersonatedSigner).balanceOf(impersonatedSigner.address);
     console.log(`USER USDC BALANCE B4 SWAP IS ${MyUsdcBalance}`);
     const swapDaiToUsdc = await swapDex.connect(impersonatedSigner).swapDaiToUsdc(1000);
     console.log(`token swapped sucessfully`);
     const UsdcBalanceOwner = await usdc.connect(impersonatedSigner).balanceOf(impersonatedSigner.address);
     console.log(`USER USDC BALANCE IS ${UsdcBalanceOwner}`);
-    console.log(`DAI TO USDC SWAPPING COMPLETED`);
+    console.log(`DAI TO USDC SWAPPING COMPLETED..............................`);
 
 
     //////////////////////////////
     //Swap USDC TO UNI
     ///////////////////////////
-    console.log(`USDC TO UNI SWAPPING STARTED`);
+    console.log(`USDC TO UNI SWAPPING STARTED................................`);
     const UniBalanceOfOwnerB = await uni.connect(impersonatedSigner3).balanceOf(impersonatedSigner3.address);
     console.log(`USER Link BALANCE before swapping IS ${UniBalanceOfOwnerB}`);
     const swapUsdcToUni = await swapDex.connect(impersonatedSigner3).swapUsdcToUni(10000);
     console.log(`USDC to UNI swapped sucessfully`);
     const UniBalanceOfOwner = await uni.connect(impersonatedSigner3).balanceOf(impersonatedSigner3.address);
     console.log(`USER Link BALANCE IS ${UniBalanceOfOwner}`);
-    console.log(`USDC TO UNI SWAPPING COMPLETED`);
+    console.log(`USDC TO UNI SWAPPING COMPLETED..............................`);
 
     
     ///////////////////////////
     //SWAP UNI TO DAI
     ////////////////////////////
-    console.log(`UNI TO DAI SWAPPING STARTED`);
+    console.log(`UNI TO DAI SWAPPING STARTED.................................`);
     const DaiBalanceOfOwnerB = await dai.connect(impersonatedSigner4) .balanceOf(impersonatedSigner.address);
     console.log(`DAI BALANCE BEFORE SWAP IS ${DaiBalanceOfOwnerB}`);
     const swapUniToDai  = await swapDex.connect(impersonatedSigner4).swapUniToDai(50);
 
     const DaiBalanceOfOwnerA = await dai.connect(impersonatedSigner4) .balanceOf(impersonatedSigner.address);
     console.log(`DAI BALANCE AFTER SWAP IS ${DaiBalanceOfOwnerA}`);
-    console.log(`UNI TO DAI SWAPPING COMPLETED`);
+    console.log(`UNI TO DAI SWAPPING COMPLETED...........................`);
 
     /////////////////////////////////////
-    // SWAP ETHER TO TOKEN LINK
+    // SWAP ETHER TO TOKEN DAI
     ///////////////////////////////////////
+    console.log(`SWAPPING ETH TO DAI STARTED............................`)
+    const OldDaiBalanceOfOwner = await dai.connect(impersonatedSigner3).balanceOf(impersonatedSigner3.address);
+    console.log(`USER DAI BALANCE BEFORE ETH2DAI SWAPP IS ${OldDaiBalanceOfOwner}`)
 
-
-
-    const OldDaiBalanceOfOwner = await dai.connect(impersonatedSigner3).balanceOf(swapDex.address);
-    console.log(`CONTRACT dai BALANCE BEFORE SWAP IS ${OldDaiBalanceOfOwner}`);
+    const OldDaiBalanceOfContract = await dai.connect(impersonatedSigner3).balanceOf(swapDex.address);
+    console.log(`CONTRACT dai BALANCE BEFORE SWAP IS ${OldDaiBalanceOfContract}`);
 
     const sent = await ethers.utils.parseEther("0.18");
 
@@ -145,8 +147,22 @@ async function main() {
       })
     const NewDaiBalanceOfOwner = await dai.connect(impersonatedSigner3).balanceOf(impersonatedSigner3.address);
     console.log(`USER DAI BALANCE AFTER ETH2DAI SWAPP IS ${NewDaiBalanceOfOwner}`);
+    console.log(`SWAPPING ETH TO DAI COMPLETED............................`)
+
     
-      
+      //////////////////////////////////////////
+      // SWAPPING UNI TO ETH
+      ///////////////////////////////////////////
+
+    console.log(`SWAPPING UNI TO ETH STARTED............................`)
+    const UnibalanceB4 = await uni.connect(impersonatedSigner4).balanceOf(impersonatedSigner4.address);
+    console.log(`USERS UNI BALLANCE B4 SWAP IS ${UnibalanceB4}`);
+    const uniAmount = await ethers.utils.parseEther("1000");
+    const uni2Eth = await swapDex.connect(impersonatedSigner4).swapUniToEth(uniAmount);
+    const UnibalanceAfta = await uni.connect(impersonatedSigner4).balanceOf(impersonatedSigner4.address);
+    console.log(`USERS UNI BALLANCE AFTA SWAP IS ${UnibalanceAfta}`);
+    console.log(`SWAPPING UNI TO ETH COMPLETED............................`)
+    
 }
 
 main().catch((error) => {

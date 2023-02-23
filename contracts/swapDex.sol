@@ -37,6 +37,10 @@ contract swapDex {
         admin = msg.sender;
     }
 
+    function displayLiquidityProviders(address _addr) public view returns(address[] memory){
+        address[] memory providers = token2LiquidityProvider[];
+    }
+
     function checkUsdcBalance() public view {
         Usdc.balanceOf(address(this));
     }
@@ -50,8 +54,8 @@ contract swapDex {
        // require(price2 > 0 , "PRICE FEED CURRENTLY UNAVAILABLE");
     }
 
-    function TransferEth (uint _amount, address _sender) internal returns(bool){
-        payable(_sender).transfer(_amount * 1e18);
+    function TransferEth (uint _amount, address payable _sender) internal returns(bool){
+        payable(_sender).transfer(_amount/ 1e18);
         return true;
     }
 
@@ -196,9 +200,9 @@ contract swapDex {
         int EthPrice = getLatestPrice_(_priceFeedEth);
         int Token2Price = getLatestPrice_(_priceFeedT2);
         PriceCheck_(EthPrice, Token2Price);
-        int token2Receive = ((int(_amount) * (EthPrice / 1e8) ) / (Token2Price / 1e8));
+        int token2Receive = ((int(_amount) * EthPrice ) / Token2Price);
         transfer_(token2, token2Receive, msg.sender);
-        _totalToken -= uint(token2Receive);
+       // _totalToken = _totalToken - (uint(token2Receive)/1e18);
     }
 
     function swapToken2Eth (uint _amount, AggregatorV3Interface _priceFeedT1, AggregatorV3Interface _priceFeedT2, IUSDT token1) internal {
@@ -209,7 +213,7 @@ contract swapDex {
         int EthToReceive = ((int(_amount) * price1) / price2);
         bool status = transferFrom_(token1, int(_amount), msg.sender);
         require(status, "TOKEN DEPOSIT FAILED");
-        TransferEth(uint (EthToReceive), msg.sender);
+        TransferEth(uint (EthToReceive), payable (msg.sender));
     }
 
     function swapp2Tokens(uint _amount, AggregatorV3Interface _priceFeedT1, AggregatorV3Interface _priceFeedT2, IUSDT token1, IUSDT token2, uint _totalToken) internal {
